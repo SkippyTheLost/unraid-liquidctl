@@ -12,6 +12,9 @@ $control = '/usr/local/emhttp/plugins/liquidctl/scripts/liquidctlctl';
 $version = trim((string) shell_exec(escapeshellarg($control).' version 2>&1'));
 ?>
 
+<h3>Installed version</h3>
+<pre id="liquidctlVersion"><?=htmlspecialchars($version)?></pre>
+
 <form id="liquidctlSettings" name="liquidctl_settings" onsubmit="return false">
 
 <table class="settings">
@@ -32,7 +35,11 @@ $version = trim((string) shell_exec(escapeshellarg($control).' version 2>&1'));
     <td>Startup commands:</td>
     <td>
       <textarea id="startupCommands" name="STARTUP_COMMANDS" rows="10" style="width:100%" spellcheck="false"><?=htmlspecialchars($commands, ENT_QUOTES)?></textarea>
-      <blockquote>One command per line, without the leading <code>liquidctl</code>. Empty lines and lines beginning with # are ignored.</blockquote>
+      <blockquote>
+        One command per line, without the leading <code>liquidctl</code>. Empty lines and lines beginning with # are ignored.
+        See the <a href="https://github.com/liquidctl/liquidctl#readme" target="_blank" rel="noopener noreferrer">official liquidctl documentation</a>
+        for commands and device-specific options.
+      </blockquote>
     </td>
   </tr>
 </table>
@@ -45,8 +52,6 @@ $version = trim((string) shell_exec(escapeshellarg($control).' version 2>&1'));
 </div>
 </form>
 
-<h3>Installed version</h3>
-<pre id="liquidctlVersion"><?=htmlspecialchars($version)?></pre>
 <h3>Detected devices</h3>
 <pre id="liquidctlOutput" style="white-space:pre-wrap">Click Refresh devices to scan for liquidctl devices.</pre>
 

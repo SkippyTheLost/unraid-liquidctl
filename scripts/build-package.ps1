@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $root = Split-Path -Parent $PSScriptRoot
-$version = "2026.06.27.2"
+$version = "2026.06.28"
 $stage = Join-Path $root ".build\liquidctl"
 $binary = Join-Path $stage "bin\liquidctl"
 $dist = Join-Path $root "dist"
