@@ -1,0 +1,65 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name       "liquidctl">
+<!ENTITY author     "sk1pp">
+<!ENTITY version    "2026.06.27">
+<!ENTITY launch     "Settings/&name;">
+<!ENTITY pluginURL  "/mnt/user/temp/plugins/liquidctl/liquidctl.plg">
+<!ENTITY bundle     "&name;-&version;.tgz">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="https://github.com/liquidctl/liquidctl">
+
+<CHANGES>
+### 2026.06.27
+- Bundle a self-contained liquidctl executable and its Python dependencies.
+- Register the page under Settings / User Utilities.
+- Use native Unraid configuration storage and startup event handling.
+</CHANGES>
+
+<FILE Name="/boot/config/plugins/&name;/liquidctl.cfg">
+<INLINE>
+<![CDATA[
+ENABLED="no"
+EXTRA_ARGS=""
+STARTUP_COMMANDS_B64=""
+]]>
+</INLINE>
+</FILE>
+
+<FILE Name="/boot/config/plugins/&name;/startup.conf">
+<INLINE>
+<![CDATA[
+# initialize all
+# set fan speed 30 40 50 60 70 80 90 100
+]]>
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash">
+<INLINE>
+set -e
+[ -s /mnt/user/temp/plugins/liquidctl/dist/&bundle; ] || {
+  echo "Missing release bundle: /mnt/user/temp/plugins/liquidctl/dist/&bundle;"
+  exit 1
+}
+rm -rf /usr/local/emhttp/plugins/&name;
+tar -xzf /mnt/user/temp/plugins/liquidctl/dist/&bundle; -C /usr/local/emhttp/plugins
+chmod 755 /usr/local/emhttp/plugins/&name;/bin/liquidctl
+chmod 755 /usr/local/emhttp/plugins/&name;/scripts/liquidctlctl
+chmod 755 /usr/local/emhttp/plugins/&name;/event/started
+ln -sf /usr/local/emhttp/plugins/&name;/bin/liquidctl /usr/local/bin/liquidctl
+echo "liquidctl &version; installed."
+/usr/local/emhttp/plugins/&name;/scripts/liquidctlctl version
+</INLINE>
+</FILE>
+
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+rm -f /usr/local/bin/liquidctl
+rm -rf /usr/local/emhttp/plugins/&name;
+echo "liquidctl removed. Settings remain in /boot/config/plugins/&name;."
+</INLINE>
+</FILE>
+
+</PLUGIN>

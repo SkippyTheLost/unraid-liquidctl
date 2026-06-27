@@ -1,0 +1,70 @@
+Menu="Utilities"
+Title="liquidctl"
+Icon="fa-tint"
+---
+<?php
+$cfg = parse_plugin_cfg('liquidctl');
+$enabled = $cfg['ENABLED'] ?? 'no';
+$extraArgs = $cfg['EXTRA_ARGS'] ?? '';
+$commandsFile = '/boot/config/plugins/liquidctl/startup.conf';
+$commands = is_file($commandsFile) ? file_get_contents($commandsFile) : '';
+$control = '/usr/local/emhttp/plugins/liquidctl/scripts/liquidctlctl';
+$version = trim((string) shell_exec(escapeshellarg($control).' version 2>&1'));
+$devices = trim((string) shell_exec(escapeshellarg($control).' list 2>&1'));
+?>
+
+<form name="liquidctl_settings" method="POST" action="/update.php" target="progressFrame" onsubmit="encodeStartupCommands()">
+<input type="hidden" name="#file" value="liquidctl/liquidctl.cfg">
+<input type="hidden" name="#command" value="<?=$control?> save-startup">
+<input type="hidden" id="STARTUP_COMMANDS_B64" name="STARTUP_COMMANDS_B64" value="">
+
+<table class="settings">
+  <tr>
+    <td>Apply commands when Unraid starts:</td>
+    <td>
+      <select name="ENABLED">
+        <?=mk_option($enabled, 'yes', 'Yes')?>
+        <?=mk_option($enabled, 'no', 'No')?>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Global arguments:</td>
+    <td><input type="text" name="EXTRA_ARGS" value="<?=htmlspecialchars($extraArgs, ENT_QUOTES)?>" placeholder="Optional"></td>
+  </tr>
+  <tr>
+    <td>Startup commands:</td>
+    <td>
+      <textarea id="startupCommands" rows="10" style="width:100%" spellcheck="false"><?=htmlspecialchars($commands, ENT_QUOTES)?></textarea>
+      <blockquote>One command per line, without the leading <code>liquidctl</code>. Empty lines and lines beginning with # are ignored.</blockquote>
+    </td>
+  </tr>
+</table>
+
+<div style="text-align:right">
+  <input type="submit" value="Apply">
+  <input type="button" value="Run startup commands" onclick="runLiquidctl('apply')">
+  <input type="button" value="Refresh devices" onclick="runLiquidctl('list')">
+  <input type="button" value="Done" onclick="done()">
+</div>
+</form>
+
+<h3>Installed version</h3>
+<pre id="liquidctlVersion"><?=htmlspecialchars($version)?></pre>
+<h3>Detected devices</h3>
+<pre id="liquidctlOutput" style="white-space:pre-wrap"><?=htmlspecialchars($devices)?></pre>
+
+<script>
+function encodeStartupCommands() {
+  const value = document.getElementById('startupCommands').value;
+  document.getElementById('STARTUP_COMMANDS_B64').value = btoa(unescape(encodeURIComponent(value)));
+}
+
+function runLiquidctl(action) {
+  const output = document.getElementById('liquidctlOutput');
+  output.textContent = 'Running...';
+  $.post('/plugins/liquidctl/include/execute.php', {action: action})
+    .done(function(data) { output.textContent = data; })
+    .fail(function(xhr) { output.textContent = xhr.responseText || 'Command failed'; });
+}
+</script>

@@ -1,0 +1,60 @@
+#!/bin/bash
+
+PLUGIN_DIR=/usr/local/emhttp/plugins/liquidctl
+CONFIG_DIR=/boot/config/plugins/liquidctl
+CONFIG_FILE="$CONFIG_DIR/liquidctl.cfg"
+COMMANDS_FILE="$CONFIG_DIR/startup.conf"
+BIN="$PLUGIN_DIR/bin/liquidctl"
+LOG=/var/log/liquidctl.log
+
+mkdir -p "$CONFIG_DIR"
+
+load_config() {
+  ENABLED=no
+  EXTRA_ARGS=
+  [ -f "$CONFIG_FILE" ] && source "$CONFIG_FILE"
+}
+
+require_binary() {
+  if [ ! -x "$BIN" ]; then
+    echo "liquidctl executable is missing from $PLUGIN_DIR/bin"
+    return 1
+  fi
+}
+
+run_commands() {
+  require_binary || return 1
+  load_config
+  [ -s "$COMMANDS_FILE" ] || { echo "No startup commands configured."; return 0; }
+  while IFS= read -r line || [ -n "$line" ]; do
+    [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+    echo "$(date '+%F %T') liquidctl $EXTRA_ARGS $line" | tee -a "$LOG"
+    # These arguments are deliberately administrator-authored configuration.
+    eval '"$BIN" '"$EXTRA_ARGS"' '"$line" 2>&1 | tee -a "$LOG" || return 1
+  done < "$COMMANDS_FILE"
+}
+
+case "${1:-}" in
+  version)
+    require_binary && "$BIN" --version
+    ;;
+  list)
+    require_binary && "$BIN" list --verbose
+    ;;
+  apply)
+    run_commands
+    ;;
+  start)
+    load_config
+    [ "$ENABLED" = yes ] && run_commands || true
+    ;;
+  save-startup)
+    load_config
+    printf '%s' "${STARTUP_COMMANDS_B64:-}" | base64 -d > "$COMMANDS_FILE"
+    echo "liquidctl settings saved."
+    ;;
+  *)
+    echo "Usage: $0 {version|list|apply|start|save-startup}"
+    exit 2
+    ;;
+esac

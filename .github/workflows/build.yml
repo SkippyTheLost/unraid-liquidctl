@@ -1,0 +1,22 @@
+name: build
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    container: quay.io/pypa/manylinux_2_28_x86_64
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build self-contained liquidctl bundle
+        env:
+          PYTHON: /opt/python/cp312-cp312/bin/python
+          VERSION: 2026.06.27
+        run: bash scripts/build-release.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: liquidctl-unraid
+          path: dist/liquidctl-*.tgz
