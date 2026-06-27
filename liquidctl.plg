@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "liquidctl">
 <!ENTITY author     "sk1pp">
-<!ENTITY version    "2026.06.28.2">
+<!ENTITY version    "2026.06.28.3">
 <!ENTITY launch     "Settings/&name;">
 <!ENTITY pluginURL  "https://github.com/SkippyTheLost/unraid-liquidctl/releases/latest/download/&name;.plg">
 <!ENTITY bundle     "&name;-&version;.tgz">
@@ -11,6 +11,9 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="https://github.com/SkippyTheLost/unraid-liquidctl/issues">
 
 <CHANGES>
+### 2026.06.28.3
+- Use the PNG version of the official logo for Unraid webGUI compatibility.
+
 ### 2026.06.28.2
 - Use the official liquidctl logo from the upstream repository.
 

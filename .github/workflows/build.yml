@@ -21,7 +21,7 @@ jobs:
       - name: Build self-contained liquidctl bundle
         env:
           PYTHON: python3
-          VERSION: 2026.06.28.2
+          VERSION: 2026.06.28.3
           PIP_ROOT_USER_ACTION: ignore
           PIP_DISABLE_PIP_VERSION_CHECK: 1
         run: bash scripts/build-release.sh

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
-VERSION=${VERSION:-2026.06.28.2}
+VERSION=${VERSION:-2026.06.28.3}
 PYTHON=${PYTHON:-python3}
 STAGE="$ROOT/.build/liquidctl"
 DIST="$ROOT/dist"
