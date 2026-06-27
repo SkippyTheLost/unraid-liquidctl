@@ -11,13 +11,19 @@ permissions:
 jobs:
   bundle:
     runs-on: ubuntu-latest
-    container: quay.io/pypa/manylinux_2_28_x86_64
+    container: python:3.12-slim-bullseye
     steps:
       - uses: actions/checkout@v4
+      - name: Install native build dependencies
+        run: |
+          apt-get update
+          apt-get install --yes --no-install-recommends build-essential libusb-1.0-0
       - name: Build self-contained liquidctl bundle
         env:
-          PYTHON: /opt/python/cp312-cp312/bin/python
+          PYTHON: python3
           VERSION: 2026.06.27
+          PIP_ROOT_USER_ACTION: ignore
+          PIP_DISABLE_PIP_VERSION_CHECK: 1
         run: bash scripts/build-release.sh
       - uses: actions/upload-artifact@v4
         with:

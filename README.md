@@ -15,7 +15,7 @@ Unraid does not need Python, pip, a compiler, or a virtual environment.
 
 ## Build
 
-The Linux release bundle must be built on Linux. GitHub Actions runs the build in a `manylinux_2_28_x86_64` container:
+The Linux release bundle must be built on Linux. GitHub Actions runs the build in a Debian Bullseye Python container for broad glibc compatibility:
 
 ```text
 Actions > build > Run workflow

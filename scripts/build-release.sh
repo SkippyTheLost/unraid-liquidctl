@@ -15,7 +15,8 @@ mkdir -p "$STAGE/bin" "$DIST"
   --name liquidctl \
   --collect-all liquidctl \
   --collect-all usb \
-  --collect-all hid \
+  --hidden-import hid \
+  --add-binary "/usr/lib/x86_64-linux-gnu/libusb-1.0.so.0:." \
   "$ROOT/build/liquidctl_entry.py"
 
 cp "$ROOT/dist/liquidctl" "$STAGE/bin/liquidctl"
