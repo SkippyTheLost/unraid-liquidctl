@@ -10,10 +10,9 @@ $commandsFile = '/boot/config/plugins/liquidctl/startup.conf';
 $commands = is_file($commandsFile) ? file_get_contents($commandsFile) : '';
 $control = '/usr/local/emhttp/plugins/liquidctl/scripts/liquidctlctl';
 $version = trim((string) shell_exec(escapeshellarg($control).' version 2>&1'));
-$devices = trim((string) shell_exec(escapeshellarg($control).' list 2>&1'));
 ?>
 
-<form id="liquidctlSettings" name="liquidctl_settings" onsubmit="saveLiquidctl(event)">
+<form id="liquidctlSettings" name="liquidctl_settings" onsubmit="return false">
 
 <table class="settings">
   <tr>
@@ -39,7 +38,7 @@ $devices = trim((string) shell_exec(escapeshellarg($control).' list 2>&1'));
 </table>
 
 <div style="text-align:right">
-  <input type="submit" value="Apply">
+  <input type="button" value="Apply" onclick="saveLiquidctl()">
   <input type="button" value="Run startup commands" onclick="runLiquidctl('apply')">
   <input type="button" value="Refresh devices" onclick="runLiquidctl('list')">
   <input type="button" value="Done" onclick="done()">
@@ -49,25 +48,20 @@ $devices = trim((string) shell_exec(escapeshellarg($control).' list 2>&1'));
 <h3>Installed version</h3>
 <pre id="liquidctlVersion"><?=htmlspecialchars($version)?></pre>
 <h3>Detected devices</h3>
-<pre id="liquidctlOutput" style="white-space:pre-wrap"><?=htmlspecialchars($devices)?></pre>
+<pre id="liquidctlOutput" style="white-space:pre-wrap">Click Refresh devices to scan for liquidctl devices.</pre>
 
 <script>
-async function saveLiquidctl(event) {
-  event.preventDefault();
-  const output = document.getElementById('liquidctlOutput');
-  const data = new FormData(document.getElementById('liquidctlSettings'));
-  data.set('action', 'save');
-  output.textContent = 'Saving...';
-  try {
-    const response = await fetch('/plugins/liquidctl/include/execute.php', {
-      method: 'POST',
-      body: data
-    });
-    output.textContent = await response.text();
-    if (!response.ok) throw new Error(output.textContent);
-  } catch (error) {
-    if (output.textContent === 'Saving...') output.textContent = String(error);
-  }
+function saveLiquidctl() {
+  const output = $('#liquidctlOutput');
+  output.text('Saving...');
+  $.post('/plugins/liquidctl/include/execute.php', {
+    action: 'save',
+    ENABLED: $('[name="ENABLED"]').val(),
+    EXTRA_ARGS: $('[name="EXTRA_ARGS"]').val(),
+    STARTUP_COMMANDS: $('#startupCommands').val()
+  })
+    .done(function(data) { output.text(data); })
+    .fail(function(xhr) { output.text(xhr.responseText || 'Unable to save liquidctl settings.'); });
 }
 
 function runLiquidctl(action) {
