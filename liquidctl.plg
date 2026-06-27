@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "liquidctl">
 <!ENTITY author     "sk1pp">
-<!ENTITY version    "2026.06.28">
+<!ENTITY version    "2026.06.28.1">
 <!ENTITY launch     "Settings/&name;">
 <!ENTITY pluginURL  "https://github.com/SkippyTheLost/unraid-liquidctl/releases/latest/download/&name;.plg">
 <!ENTITY bundle     "&name;-&version;.tgz">
@@ -11,6 +11,9 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="https://github.com/SkippyTheLost/unraid-liquidctl/issues">
 
 <CHANGES>
+### 2026.06.28.1
+- Add a LiquidCTL icon to the User Utilities settings tile.
+
 ### 2026.06.28
 - Link the settings page to the official liquidctl documentation.
 - Show the installed version at the top of the settings page.
