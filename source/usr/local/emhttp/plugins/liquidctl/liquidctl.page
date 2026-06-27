@@ -13,10 +13,7 @@ $version = trim((string) shell_exec(escapeshellarg($control).' version 2>&1'));
 $devices = trim((string) shell_exec(escapeshellarg($control).' list 2>&1'));
 ?>
 
-<form name="liquidctl_settings" method="POST" action="/update.php" target="progressFrame" onsubmit="encodeStartupCommands()">
-<input type="hidden" name="#file" value="liquidctl/liquidctl.cfg">
-<input type="hidden" name="#command" value="<?=$control?> save-startup">
-<input type="hidden" id="STARTUP_COMMANDS_B64" name="STARTUP_COMMANDS_B64" value="">
+<form id="liquidctlSettings" name="liquidctl_settings" onsubmit="saveLiquidctl(event)">
 
 <table class="settings">
   <tr>
@@ -35,7 +32,7 @@ $devices = trim((string) shell_exec(escapeshellarg($control).' list 2>&1'));
   <tr>
     <td>Startup commands:</td>
     <td>
-      <textarea id="startupCommands" rows="10" style="width:100%" spellcheck="false"><?=htmlspecialchars($commands, ENT_QUOTES)?></textarea>
+      <textarea id="startupCommands" name="STARTUP_COMMANDS" rows="10" style="width:100%" spellcheck="false"><?=htmlspecialchars($commands, ENT_QUOTES)?></textarea>
       <blockquote>One command per line, without the leading <code>liquidctl</code>. Empty lines and lines beginning with # are ignored.</blockquote>
     </td>
   </tr>
@@ -55,9 +52,22 @@ $devices = trim((string) shell_exec(escapeshellarg($control).' list 2>&1'));
 <pre id="liquidctlOutput" style="white-space:pre-wrap"><?=htmlspecialchars($devices)?></pre>
 
 <script>
-function encodeStartupCommands() {
-  const value = document.getElementById('startupCommands').value;
-  document.getElementById('STARTUP_COMMANDS_B64').value = btoa(unescape(encodeURIComponent(value)));
+async function saveLiquidctl(event) {
+  event.preventDefault();
+  const output = document.getElementById('liquidctlOutput');
+  const data = new FormData(document.getElementById('liquidctlSettings'));
+  data.set('action', 'save');
+  output.textContent = 'Saving...';
+  try {
+    const response = await fetch('/plugins/liquidctl/include/execute.php', {
+      method: 'POST',
+      body: data
+    });
+    output.textContent = await response.text();
+    if (!response.ok) throw new Error(output.textContent);
+  } catch (error) {
+    if (output.textContent === 'Saving...') output.textContent = String(error);
+  }
 }
 
 function runLiquidctl(action) {

@@ -48,13 +48,8 @@ case "${1:-}" in
     load_config
     [ "$ENABLED" = yes ] && run_commands || true
     ;;
-  save-startup)
-    load_config
-    printf '%s' "${STARTUP_COMMANDS_B64:-}" | base64 -d > "$COMMANDS_FILE"
-    echo "liquidctl settings saved."
-    ;;
   *)
-    echo "Usage: $0 {version|list|apply|start|save-startup}"
+    echo "Usage: $0 {version|list|apply|start}"
     exit 2
     ;;
 esac

@@ -2,7 +2,7 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name       "liquidctl">
 <!ENTITY author     "sk1pp">
-<!ENTITY version    "2026.06.27">
+<!ENTITY version    "2026.06.27.1">
 <!ENTITY launch     "Settings/&name;">
 <!ENTITY pluginURL  "https://github.com/SkippyTheLost/unraid-liquidctl/releases/latest/download/&name;.plg">
 <!ENTITY bundle     "&name;-&version;.tgz">
@@ -11,6 +11,9 @@
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" support="https://github.com/SkippyTheLost/unraid-liquidctl/issues">
 
 <CHANGES>
+### 2026.06.27.1
+- Fix saving startup commands and settings from the web interface.
+
 ### 2026.06.27
 - Bundle a self-contained liquidctl executable and its Python dependencies.
 - Register the page under Settings / User Utilities.
@@ -26,7 +29,6 @@
 <![CDATA[
 ENABLED="no"
 EXTRA_ARGS=""
-STARTUP_COMMANDS_B64=""
 ]]>
 </INLINE>
 </FILE>
