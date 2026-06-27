@@ -1,6 +1,6 @@
 Menu="Utilities"
 Title="liquidctl"
-Icon="liquidctl.png"
+Icon="liquidctl.ico"
 ---
 <?php
 $cfg = parse_plugin_cfg('liquidctl');

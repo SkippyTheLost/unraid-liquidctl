@@ -26,12 +26,12 @@ Download the `liquidctl-unraid` artifact and place its `.tgz` file in `dist/`.
 To build directly on Linux instead:
 
 ```bash
-VERSION=2026.06.28.1 PYTHON=python3 ./scripts/build-release.sh
+VERSION=2026.06.28.2 PYTHON=python3 ./scripts/build-release.sh
 ```
 
 ## Local Unraid test
 
-After the `2026.06.28.1` GitHub release exists, copy the repository to `/mnt/user/temp/plugins/liquidctl`, then run:
+After the `2026.06.28.2` GitHub release exists, copy the repository to `/mnt/user/temp/plugins/liquidctl`, then run:
 
 ```bash
 installplg /mnt/user/temp/plugins/liquidctl/liquidctl.plg
@@ -45,15 +45,15 @@ Open `/Settings/liquidctl` in the Unraid web interface.
 
 ## Install from GitHub
 
-After publishing the `2026.06.28.1` release, install this URL from **Plugins > Install Plugin**:
+After publishing the `2026.06.28.2` release, install this URL from **Plugins > Install Plugin**:
 
 ```text
 https://github.com/SkippyTheLost/unraid-liquidctl/releases/latest/download/liquidctl.plg
 ```
 
-Creating the matching `2026.06.28.1` Git tag runs the build and publishes both required release assets automatically.
+Creating the matching `2026.06.28.2` Git tag runs the build and publishes both required release assets automatically.
 
-The bundled settings icon is sourced from the [liquidctl-docker project](https://github.com/avpnusr/liquidctl-docker).
+The bundled settings icon is the official `liquidctl_logo_v1_circle_256.ico` asset from the [liquidctl repository](https://github.com/liquidctl/liquidctl).
 
 ## Startup commands
 
