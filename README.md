@@ -31,7 +31,7 @@ VERSION=2026.06.27 PYTHON=python3 ./scripts/build-release.sh
 
 ## Local Unraid test
 
-Copy the repository, including `dist/liquidctl-2026.06.27.tgz`, to `/mnt/user/temp/plugins/liquidctl`, then run:
+After the `2026.06.27` GitHub release exists, copy the repository to `/mnt/user/temp/plugins/liquidctl`, then run:
 
 ```bash
 installplg /mnt/user/temp/plugins/liquidctl/liquidctl.plg
@@ -39,7 +39,19 @@ liquidctl --version
 liquidctl list --verbose
 ```
 
+The locally opened manifest downloads its matching bundle from the GitHub release.
+
 Open `/Settings/liquidctl` in the Unraid web interface.
+
+## Install from GitHub
+
+After publishing the `2026.06.27` release, install this URL from **Plugins > Install Plugin**:
+
+```text
+https://github.com/SkippyTheLost/unraid-liquidctl/releases/latest/download/liquidctl.plg
+```
+
+Creating the matching `2026.06.27` Git tag runs the build and publishes both required release assets automatically.
 
 ## Startup commands
 
